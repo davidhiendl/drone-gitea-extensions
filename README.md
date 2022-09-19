@@ -1,7 +1,7 @@
 # Drone Gitea Secret Extension
 
 An extension to improve Gitea/Drone integration, creating a temporary per-pipeline access tokens with access scoped to
-the owner of the build job and injection it as environment variable into the build.
+the owner of the build job and injecting it as environment variables into the build.
 
 ![Example pipeline output](./doc/example-job-output.png)
 
