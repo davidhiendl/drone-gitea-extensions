@@ -60,6 +60,10 @@ func main() {
 	http.Handle("/env", environHandler)
 	http.Handle("/secret", secretHandler)
 
+	if cfg.GiteaDroneTokenGCEnable {
+		shared.StartGiteaTokenCleanupBackgroundJob(client, cfg)
+	}
+
 	logrus.Infof("server listening on address %s", cfg.Bind)
 	logrus.Fatal(http.ListenAndServe(cfg.Bind, nil))
 }

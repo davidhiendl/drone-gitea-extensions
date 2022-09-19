@@ -12,6 +12,7 @@ type AppConfig struct {
 	GiteaPass string `envconfig:"GITEA_PASSWORD" required:"true"`
 	// GiteaToken         string `envconfig:"GITEA_TOKEN" required:"true"`
 
-	GiteaDroneTokenTTL    int    `envconfig:"GITEA_DRONE_TOKEN_TTL" default:"3600"`
-	GiteaDroneTokenPrefix string `envconfig:"GITEA_DRONE_TOKEN_PREFIX" default:"drone"`
+	GiteaDroneTokenTTL      int    `envconfig:"GITEA_DRONE_TOKEN_TTL" default:"3900"`
+	GiteaDroneTokenGCEnable bool   `envconfig:"GITEA_DRONE_TOKEN_GC_ENABLE" default:"true" required:"true"`
+	GiteaDroneTokenPrefix   string `envconfig:"GITEA_DRONE_TOKEN_PREFIX" default:"drone"`
 }
