@@ -1,0 +1,4 @@
+.env
+.testenv
+bin/
+.idea/
