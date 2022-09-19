@@ -8,13 +8,14 @@ config:
   GITEA_USERNAME: ""
   GITEA_PASSWORD: ""
   GITEA_DRONE_TOKEN_TTL: "3900" # default drone build timeout is 1 hour, add 5 minutes as safety margin
-  GITEA_DRONE_TOKEN_PREFIX: "drone"
+  GITEA_DRONE_TOKEN_GC_ENABLE: "1" # enable garbage collect of old tokens
+  GITEA_DRONE_TOKEN_PREFIX: "drone" # will generate tokens named "drone_<build-id>_<timestamp>"
 
 image:
   repository: ghcr.io/davidhiendl/drone-gitea-secret-extension
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "master"
+  tag: "v0.1.0"
 
 imagePullSecrets: []
 nameOverride: ""
