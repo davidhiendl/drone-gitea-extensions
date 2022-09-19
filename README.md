@@ -74,11 +74,42 @@ kind: pipeline
 name: default
 
 steps:
-  - name: build
-    image: alpine
-    commands:
-      - echo "running env command"
-      - env
-      - echo "filtering env command to GITEA_*"
-      - env | grep GITEA_
+- name: build
+  image: alpine
+  environment:
+    GITEA_URL:
+      from_secret: gitea_url
+    GITEA_TOKEN:
+      from_secret: gitea_build_token
+    GITEA_PACKAGES_URL:
+      from_secret: gitea_docker_registry
+
+---
+kind: secret
+name: gitea_url
+get:
+  path: gitea
+  name: url
+
+---
+kind: secret
+name: gitea_build_token
+get:
+  path: gitea
+  name: build_token
+
+---
+kind: secret
+name: gitea_packages_url
+get:
+  path: gitea
+  name: packages_url
+
+---
+kind: secret
+name: gitea_docker_registry
+get:
+  path: gitea
+  name: docker_registry
 ```
+
