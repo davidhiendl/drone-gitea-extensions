@@ -3,15 +3,17 @@
 An extension to improve Gitea/Drone integration, creating a temporary per-pipeline access tokens with access scoped to
 the owner of the build job and injection it as environment variable into the build.
 
+![Example pipeline output](./doc/example-job-output.png)
+
 ## Installation
 
-Create a shared secret:
+### Create a shared secret:
 
 ```bash
 openssl rand -hex 16
 ```
 
-Download and run the plugin:
+### Download and run the plugin via docker:
 
 ```console
 $ docker run -d \
@@ -22,6 +24,9 @@ $ docker run -d \
   --name=drone-gitea-secret-extension \
   ghcr.io/davidhiendl/drone-gitea-secret-extension:master
 ```
+
+### Deploy the plugin to Kubernetes via Helm:
+See folder [./charts](./charts)
 
 ### Environment Plugin Configuration
 
@@ -54,7 +59,7 @@ steps:
     commands:
       - echo "running env command"
       - env
-      - echo "filtering env command to GITEA_*"
+      - echo "filtering env to GITEA_*"
       - env | grep GITEA_
 ```
 
@@ -82,7 +87,14 @@ steps:
     GITEA_TOKEN:
       from_secret: gitea_build_token
     GITEA_PACKAGES_URL:
+      from_secret: gitea_packages_url
+    GITEA_DOCKER_REGISTRY:
       from_secret: gitea_docker_registry
+  commands:
+    - echo "running env command"
+    - env
+    - echo "filtering env to GITEA_*"
+    - env | grep GITEA_
 
 ---
 kind: secret
