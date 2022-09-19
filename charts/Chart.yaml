@@ -1,0 +1,20 @@
+apiVersion: v1
+description: Drone Gitea Secret Extension Deployment
+name: dgse
+version: 0.0.1
+appVersion: 0.0.1
+keywords:
+- drone
+- gitea
+- secret
+- secret extension
+- build credentials
+- build package api
+- docker registry
+home: https://github.com/davidhiendl/drone-gitea-secret-extension
+# icon: https://....
+sources:
+- https://github.com/davidhiendl/drone-gitea-secret-extension
+maintainers:
+- name: David Hiendl
+  email: david.hiendl@dhswt.de
