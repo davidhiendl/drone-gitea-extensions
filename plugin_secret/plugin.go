@@ -103,7 +103,7 @@ func (p *plugin) createGiteaToken(req *secret.Request) (*gitea.AccessToken, erro
 		return nil, errors.New(fmt.Sprintf("failed to find gitea user: '%s'", req.Build.Sender))
 	}
 
-	accessTokenName := fmt.Sprintf("%s_%s_%s", p.config.GiteaDroneTokenPrefix, req.Build.ID, req.Build.Timestamp)
+	accessTokenName := fmt.Sprintf("%s_%d_%d", p.config.GiteaDroneTokenPrefix, req.Build.ID, req.Build.Timestamp)
 
 	p.client.SetSudo(req.Build.Sender)
 	token, _, err := p.client.CreateAccessToken(gitea.CreateAccessTokenOption{Name: accessTokenName})
