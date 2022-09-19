@@ -2,3 +2,4 @@
 .testenv
 bin/
 .idea/
+deploy/

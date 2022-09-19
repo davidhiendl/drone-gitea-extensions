@@ -1,4 +1,4 @@
-package plugin
+package plugin_secret
 
 import (
 	"code.gitea.io/sdk/gitea"

@@ -1,13 +1,15 @@
 package main
 
 import (
+	"code.gitea.io/sdk/gitea"
+	"dhswt.de/drone-gitea-secret-extension/plugin_env"
 	"dhswt.de/drone-gitea-secret-extension/shared"
+	"github.com/drone/drone-go/plugin/environ"
+	"github.com/drone/drone-go/plugin/secret"
 	"net/http"
 
-	"dhswt.de/drone-gitea-secret-extension/plugin"
-	"github.com/drone/drone-go/plugin/secret"
+	"dhswt.de/drone-gitea-secret-extension/plugin_secret"
 
-	"code.gitea.io/sdk/gitea"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/kelseyhightower/envconfig"
 	"github.com/sirupsen/logrus"
@@ -32,15 +34,33 @@ func main() {
 
 	client := createGiteaClient(cfg)
 
-	handler := secret.Handler(
+	environHandler := environ.Handler(
 		cfg.Secret,
-		plugin.New(client, cfg),
+		plugin_env.New(client, cfg),
 		logrus.StandardLogger(),
 	)
 
-	logrus.Infof("server listening on address %s", cfg.Bind)
+	secretHandler := secret.Handler(
+		cfg.Secret,
+		plugin_secret.New(client, cfg),
+		logrus.StandardLogger(),
+	)
 
-	http.Handle("/", handler)
+	switch cfg.DefaultExtension {
+	case "environ":
+		http.Handle("/", environHandler)
+		break
+	case "secret":
+		http.Handle("/", secretHandler)
+		break
+	default:
+		logrus.Fatalf("no valid handler specified for DRONE_DEFAULT_EXTENSION, valid values: 'environ' (default), 'secret'")
+	}
+
+	http.Handle("/env", environHandler)
+	http.Handle("/secret", secretHandler)
+
+	logrus.Infof("server listening on address %s", cfg.Bind)
 	logrus.Fatal(http.ListenAndServe(cfg.Bind, nil))
 }
 

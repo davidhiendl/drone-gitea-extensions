@@ -1,4 +1,4 @@
-package plugin
+package plugin_secret
 
 import "testing"
 
