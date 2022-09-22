@@ -26,7 +26,13 @@ $ docker run -d \
 ```
 
 ### Deploy the plugin to Kubernetes via Helm:
+
 See folder [./charts](./charts)
+
+### Multiple Plugins at once
+
+The environment, secret and registry plugin can be used concurrently. Simply add all the relevant environment variables
+to the agent.
 
 ### Environment Plugin Configuration
 
@@ -43,7 +49,7 @@ but creates a token and injects the environment variables into every build regar
 Update your runner configuration to include the plugin address and the shared secret as environment variable:
 
 ```bash
-DRONE_ENV_PLUGIN_ENDPOINT=http://1.2.3.4:3000/environ
+DRONE_ENV_PLUGIN_ENDPOINT=http://1.2.3.4:3000/env
 DRONE_ENV_PLUGIN_TOKEN==<shared-secret>
 ```
 
@@ -63,6 +69,29 @@ steps:
       - env | grep GITEA_
 ```
 
+### Registry Plugin Configuration
+
+Automatically injects the Gitea registry into the build allowing the use of images in the gitea registry for pipeline
+steps.
+
+Update your runner configuration to include the plugin address and the shared secret as environment variable:
+
+```bash
+DRONE_REGISTRY_PLUGIN_ENDPOINT=http://1.2.3.4:3000/registry
+DRONE_REGISTRY_PLUGIN_TOKEN==<shared-secret>
+```
+
+Use in pipelines: No Additional steps required, just reference the image.
+
+```yaml
+kind: pipeline
+name: default
+
+steps:
+  - name: build
+    image: gitea.example.com/<owner>/<image>:<tag>
+```
+
 ### Secret Plugin Configuration
 
 Update your runner configuration to include the plugin address and the shared secret as environment variable:
@@ -79,22 +108,22 @@ kind: pipeline
 name: default
 
 steps:
-- name: build
-  image: alpine
-  environment:
-    GITEA_URL:
-      from_secret: gitea_url
-    GITEA_TOKEN:
-      from_secret: gitea_build_token
-    GITEA_PACKAGES_URL:
-      from_secret: gitea_packages_url
-    GITEA_DOCKER_REGISTRY:
-      from_secret: gitea_docker_registry
-  commands:
-    - echo "running env command"
-    - env
-    - echo "filtering env to GITEA_*"
-    - env | grep GITEA_
+  - name: build
+    image: alpine
+    environment:
+      GITEA_URL:
+        from_secret: gitea_url
+      GITEA_TOKEN:
+        from_secret: gitea_build_token
+      GITEA_PACKAGES_URL:
+        from_secret: gitea_packages_url
+      GITEA_DOCKER_REGISTRY:
+        from_secret: gitea_docker_registry
+    commands:
+      - echo "running env command"
+      - env
+      - echo "filtering env to GITEA_*"
+      - env | grep GITEA_
 
 ---
 kind: secret
@@ -124,4 +153,3 @@ get:
   path: gitea
   name: docker_registry
 ```
-
