@@ -84,7 +84,7 @@ func (c *TokenCache) GetAccessToken(buildId int64, sender string) (*gitea.Access
 	// attempt to fetch token from cache
 	cacheEntry, exists := c.entries[buildId]
 	if exists {
-		logrus.Infof("reusing cached token for buildId=%d sender=%s", buildId, sender)
+		logrus.Debugf("reusing cached token for buildId=%d sender=%s", buildId, sender)
 		return cacheEntry.token, nil
 	}
 

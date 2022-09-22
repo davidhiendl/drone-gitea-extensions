@@ -17,9 +17,9 @@ func GiteaTokenCleanupBackgroundJob(client *gitea.Client, cfg *AppConfig) {
 	// between 0-60s on startup
 	time.Sleep(time.Duration(rand.Int31n(60)) * time.Second)
 	for {
-		logrus.Infof("Running gitea token cleanup ...")
+		logrus.Debugf("Running gitea token cleanup ...")
 		giteaTokenCleanup(client, cfg)
-		logrus.Infof("Finished gitea token cleanup.")
+		logrus.Debugf("Finished gitea token cleanup.")
 		time.Sleep(5*time.Minute + time.Duration(rand.Int31n(60))*time.Second)
 	}
 }

@@ -44,7 +44,7 @@ type plugin struct {
 }
 
 func (p *plugin) Find(ctx context.Context, req *secret.Request) (*drone.Secret, error) {
-	logrus.Infof("plugin request received: path=%s name=%sbuild=%+v repo=%+v", req.Path, req.Name, req.Build, req.Repo)
+	logrus.Debugf("secret plugin request received: path=%s name=%sbuild=%+v repo=%+v", req.Path, req.Name, req.Build, req.Repo)
 
 	// only handle request for gitea path
 	if req.Path != PATH_GITEA {
