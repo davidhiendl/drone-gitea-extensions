@@ -20,6 +20,8 @@ spec:
       labels:
         {{- include "dgse.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: webserver
+        revision: {{ .Release.Revision | quote }}
+
     spec:
       enableServiceLinks: false
       {{- with .Values.imagePullSecrets }}
