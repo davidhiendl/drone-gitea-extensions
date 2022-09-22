@@ -21,8 +21,8 @@ $ docker run -d \
   --env=DRONE_DEBUG=true \
   --env=DRONE_SECRET=<shared-secret> \
   --restart=always \
-  --name=drone-gitea-secret-extension \
-  ghcr.io/davidhiendl/drone-gitea-secret-extension:master
+  --name=drone-gitea-extensions \
+  ghcr.io/davidhiendl/drone-gitea-extensions:master
 ```
 
 ### Deploy the plugin to Kubernetes via Helm:

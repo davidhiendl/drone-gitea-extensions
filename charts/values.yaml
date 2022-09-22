@@ -12,7 +12,7 @@ config:
   GITEA_DRONE_TOKEN_PREFIX: "drone" # will generate tokens named "drone_<build-id>_<timestamp>"
 
 image:
-  repository: ghcr.io/davidhiendl/drone-gitea-secret-extension
+  repository: ghcr.io/davidhiendl/drone-gitea-extensions
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "v0.1.0"

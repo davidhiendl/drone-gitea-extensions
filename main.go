@@ -2,10 +2,10 @@ package main
 
 import (
 	"code.gitea.io/sdk/gitea"
-	"dhswt.de/drone-gitea-secret-extension/plugin_env"
-	"dhswt.de/drone-gitea-secret-extension/plugin_registry"
-	"dhswt.de/drone-gitea-secret-extension/plugin_secret"
-	"dhswt.de/drone-gitea-secret-extension/shared"
+	"dhswt.de/drone-gitea-extensions/plugin_env"
+	"dhswt.de/drone-gitea-extensions/plugin_registry"
+	"dhswt.de/drone-gitea-extensions/plugin_secret"
+	"dhswt.de/drone-gitea-extensions/shared"
 	"fmt"
 	"github.com/drone/drone-go/plugin/environ"
 	"github.com/drone/drone-go/plugin/registry"

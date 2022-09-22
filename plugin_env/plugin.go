@@ -3,7 +3,7 @@ package plugin_env
 import (
 	"code.gitea.io/sdk/gitea"
 	"context"
-	"dhswt.de/drone-gitea-secret-extension/shared"
+	"dhswt.de/drone-gitea-extensions/shared"
 	"github.com/drone/drone-go/plugin/environ"
 	"github.com/sirupsen/logrus"
 	"net/url"

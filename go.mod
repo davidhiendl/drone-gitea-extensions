@@ -1,4 +1,4 @@
-module dhswt.de/drone-gitea-secret-extension
+module dhswt.de/drone-gitea-extensions
 
 go 1.19
 
