@@ -5,8 +5,6 @@ type AppConfig struct {
 	Debug  bool   `envconfig:"DRONE_DEBUG"`
 	Secret string `envconfig:"DRONE_SECRET" required:"true"`
 
-	DefaultExtension string `envconfig:"DRONE_DEFAULT_EXTENSION" required:"true" default:"environ"`
-
 	GiteaURL  string `envconfig:"GITEA_URL" required:"true"`
 	GiteaUser string `envconfig:"GITEA_USERNAME" required:"true"`
 	GiteaPass string `envconfig:"GITEA_PASSWORD" required:"true"`

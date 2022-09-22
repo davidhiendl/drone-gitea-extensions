@@ -6,6 +6,7 @@ import (
 	"dhswt.de/drone-gitea-secret-extension/plugin_registry"
 	"dhswt.de/drone-gitea-secret-extension/plugin_secret"
 	"dhswt.de/drone-gitea-secret-extension/shared"
+	"fmt"
 	"github.com/drone/drone-go/plugin/environ"
 	"github.com/drone/drone-go/plugin/registry"
 	"github.com/drone/drone-go/plugin/secret"
@@ -41,36 +42,25 @@ func main() {
 		plugin_env.New(client, cfg, &tokenCache),
 		logrus.StandardLogger(),
 	)
+	http.Handle("/env", environHandler)
 
 	secretHandler := secret.Handler(
 		cfg.Secret,
 		plugin_secret.New(client, cfg, &tokenCache),
 		logrus.StandardLogger(),
 	)
+	http.Handle("/secret", secretHandler)
 
 	registryHandler := registry.Handler(
 		cfg.Secret,
 		plugin_registry.New(client, cfg, &tokenCache),
 		logrus.StandardLogger(),
 	)
-
-	switch cfg.DefaultExtension {
-	case "environ":
-		http.Handle("/", environHandler)
-		break
-	case "secret":
-		http.Handle("/", secretHandler)
-		break
-	case "registry":
-		http.Handle("/", registryHandler)
-		break
-	default:
-		logrus.Fatalf("no valid handler specified for DRONE_DEFAULT_EXTENSION, valid values: 'environ' (default), 'secret', 'registry'")
-	}
-
-	http.Handle("/env", environHandler)
-	http.Handle("/secret", secretHandler)
 	http.Handle("/registry", registryHandler)
+
+	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
+		_, _ = fmt.Fprintf(writer, "OK")
+	})
 
 	if cfg.GiteaDroneTokenGCEnable {
 		shared.StartGiteaTokenCleanupBackgroundJob(client, cfg)
