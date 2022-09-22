@@ -1,16 +1,17 @@
-package plugin_env
+package plugin_registry
 
 import (
 	"code.gitea.io/sdk/gitea"
 	"context"
 	"dhswt.de/drone-gitea-secret-extension/shared"
-	"github.com/drone/drone-go/plugin/environ"
+	"github.com/drone/drone-go/drone"
+	"github.com/drone/drone-go/plugin/registry"
 	"github.com/sirupsen/logrus"
 	"net/url"
 )
 
 // New returns a new secret plugin.
-func New(client *gitea.Client, config *shared.AppConfig, cache *shared.TokenCache) environ.Plugin {
+func New(client *gitea.Client, config *shared.AppConfig, cache *shared.TokenCache) registry.Plugin {
 
 	giteaUrl, err := url.Parse(config.GiteaURL)
 	if err != nil {
@@ -21,8 +22,6 @@ func New(client *gitea.Client, config *shared.AppConfig, cache *shared.TokenCach
 		client:                  client,
 		config:                  config,
 		cache:                   cache,
-		giteaPackagesURL:        config.GiteaURL + "/api/packages",
-		giteaURL:                config.GiteaURL,
 		giteaDockerRegistryHost: giteaUrl.Hostname(),
 	}
 }
@@ -31,12 +30,10 @@ type plugin struct {
 	client                  *gitea.Client
 	config                  *shared.AppConfig
 	cache                   *shared.TokenCache
-	giteaPackagesURL        string
-	giteaURL                string
 	giteaDockerRegistryHost string
 }
 
-func (p *plugin) List(ctx context.Context, req *environ.Request) ([]*environ.Variable, error) {
+func (p *plugin) List(ctx context.Context, req *registry.Request) ([]*drone.Registry, error) {
 	logrus.Infof("plugin request received: build=%+v repo=%+v", req.Build, req.Repo)
 
 	token, err := p.cache.GetAccessToken(req.Build.ID, req.Build.Sender)
@@ -45,12 +42,13 @@ func (p *plugin) List(ctx context.Context, req *environ.Request) ([]*environ.Var
 		return nil, err
 	}
 
-	envVars := []*environ.Variable{
-		{Name: "GITEA_URL", Data: p.giteaURL, Mask: false},
-		{Name: "GITEA_BUILD_TOKEN", Data: token.Token, Mask: true},
-		{Name: "GITEA_PACKAGES_API", Data: p.giteaPackagesURL, Mask: false},
-		{Name: "GITEA_DOCKER_REGISTRY", Data: p.giteaDockerRegistryHost, Mask: false},
+	credentials := []*drone.Registry{
+		{
+			Address:  p.giteaDockerRegistryHost,
+			Username: req.Build.Sender,
+			Password: token.Token,
+		},
 	}
 
-	return envVars, nil
+	return credentials, nil
 }
