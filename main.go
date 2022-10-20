@@ -2,11 +2,13 @@ package main
 
 import (
 	"code.gitea.io/sdk/gitea"
+	"dhswt.de/drone-gitea-extensions/plugin_converter"
 	"dhswt.de/drone-gitea-extensions/plugin_env"
 	"dhswt.de/drone-gitea-extensions/plugin_registry"
 	"dhswt.de/drone-gitea-extensions/plugin_secret"
 	"dhswt.de/drone-gitea-extensions/shared"
 	"fmt"
+	"github.com/drone/drone-go/plugin/converter"
 	"github.com/drone/drone-go/plugin/environ"
 	"github.com/drone/drone-go/plugin/registry"
 	"github.com/drone/drone-go/plugin/secret"
@@ -57,6 +59,13 @@ func main() {
 		logrus.StandardLogger(),
 	)
 	http.Handle("/registry", registryHandler)
+
+	converterHandler := converter.Handler(
+		plugin_converter.New(client, cfg, &tokenCache),
+		cfg.Secret,
+		logrus.StandardLogger(),
+	)
+	http.Handle("/converter", converterHandler)
 
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 		_, _ = fmt.Fprintf(writer, "OK")
