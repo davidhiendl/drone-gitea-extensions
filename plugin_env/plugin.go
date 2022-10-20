@@ -65,7 +65,7 @@ func (p *plugin) List(ctx context.Context, req *environ.Request) ([]*environ.Var
 			{Name: "CI_PROJECT_NAMESPACE", Data: req.Repo.Namespace, Mask: false},
 
 			{Name: "CI_REGISTRY", Data: p.giteaDockerRegistryHost, Mask: false},
-			{Name: "CI_REGISTRY_IMAGE", Data: p.giteaDockerRegistryHost + req.Repo.Namespace + "/" + req.Repo.Name, Mask: false},
+			{Name: "CI_REGISTRY_IMAGE", Data: p.giteaDockerRegistryHost + "/" + req.Repo.Namespace + "/" + req.Repo.Name, Mask: false},
 			{Name: "CI_REGISTRY_USER", Data: token.Name, Mask: false},
 			{Name: "CI_REGISTRY_PASSWORD", Data: token.Token, Mask: true},
 		}
