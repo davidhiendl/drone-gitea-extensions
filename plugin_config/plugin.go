@@ -4,6 +4,7 @@ import (
 	"code.gitea.io/sdk/gitea"
 	"context"
 	"dhswt.de/drone-gitea-extensions/shared"
+	"encoding/base64"
 	"errors"
 	"github.com/drone/drone-go/drone"
 	"github.com/drone/drone-go/plugin/config"
@@ -59,9 +60,14 @@ func (p *Plugin) Find(ctx context.Context, req *config.Request) (*drone.Config, 
 		return nil, errors.New("Failed to find .drone.yml in gitea, type=" + contents.Type + " expected: file")
 	}
 
-	originalYaml := contents.Content
+	yamlB64 := contents.Content
+	yamlBytes, err := base64.StdEncoding.DecodeString(*yamlB64)
+	if err != nil {
+		return nil, err
+	}
+	yaml := string(yamlBytes)
 
-	yaml, err := p.regexReplaceIncludeDirectives(*originalYaml, http.DefaultClient)
+	yaml, err = p.regexReplaceIncludeDirectives(yaml, http.DefaultClient)
 	if err != nil {
 		return nil, err
 	}
