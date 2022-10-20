@@ -14,5 +14,6 @@ type AppConfig struct {
 	GiteaDroneTokenGCEnable bool   `envconfig:"GITEA_DRONE_TOKEN_GC_ENABLE" default:"true" required:"true"`
 	GiteaDroneTokenPrefix   string `envconfig:"GITEA_DRONE_TOKEN_PREFIX" default:"drone"`
 
-	DroneConfigIncludeMax int `envconfig:"DRONE_CONFIG_INCLUDE_MAX" default:"20"`
+	DroneConfigIncludeMax      int  `envconfig:"DRONE_CONFIG_INCLUDE_MAX" default:"20"`
+	EmulateCIPrefixedVariables bool `envconfig:"EMULATE_CI_PREFIXED_ENV_VARS" default:"true"`
 }

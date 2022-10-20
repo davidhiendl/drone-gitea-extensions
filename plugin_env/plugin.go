@@ -24,6 +24,7 @@ func New(client *gitea.Client, config *shared.AppConfig, cache *shared.TokenCach
 		giteaPackagesURL:        config.GiteaURL + "/api/packages",
 		giteaURL:                config.GiteaURL,
 		giteaDockerRegistryHost: giteaUrl.Hostname(),
+		giteaHostname:           giteaUrl.Hostname(),
 	}
 }
 
@@ -34,6 +35,7 @@ type plugin struct {
 	giteaPackagesURL        string
 	giteaURL                string
 	giteaDockerRegistryHost string
+	giteaHostname           string
 }
 
 func (p *plugin) List(ctx context.Context, req *environ.Request) ([]*environ.Variable, error) {
@@ -50,6 +52,22 @@ func (p *plugin) List(ctx context.Context, req *environ.Request) ([]*environ.Var
 		{Name: "GITEA_BUILD_TOKEN", Data: token.Token, Mask: true},
 		{Name: "GITEA_PACKAGES_API", Data: p.giteaPackagesURL, Mask: false},
 		{Name: "GITEA_DOCKER_REGISTRY", Data: p.giteaDockerRegistryHost, Mask: false},
+	}
+
+	if p.config.EmulateCIPrefixedVariables {
+		ciVariables := []*environ.Variable{
+			// mirror various gitlab CI_ variables
+			{Name: "CI_SERVER_URL", Data: p.giteaURL, Mask: false},
+			{Name: "CI_SERVER_HOST", Data: p.giteaHostname, Mask: false},
+			{Name: "CI_PROJECT_NAME", Data: req.Repo.Name, Mask: false},
+			{Name: "CI_PROJECT_NAMESPACE", Data: req.Repo.Namespace, Mask: false},
+
+			{Name: "CI_REGISTRY", Data: p.giteaDockerRegistryHost, Mask: false},
+			{Name: "CI_REGISTRY_IMAGE", Data: p.giteaDockerRegistryHost + req.Repo.Namespace + "/" + req.Repo.Name, Mask: false},
+			{Name: "CI_REGISTRY_USER", Data: token.Name, Mask: false},
+			{Name: "CI_REGISTRY_PASSWORD", Data: token.Token, Mask: true},
+		}
+		envVars = append(envVars, ciVariables...)
 	}
 
 	return envVars, nil
