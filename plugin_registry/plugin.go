@@ -34,6 +34,8 @@ type plugin struct {
 }
 
 func (p *plugin) List(ctx context.Context, req *registry.Request) ([]*drone.Registry, error) {
+	logrus.Infof("[registry] request for build=%s %s/%s commit=%s", req.Build.ID, req.Repo.Namespace, req.Repo.Name, req.Build.After)
+
 	logrus.Debugf("registry plugin request received: build=%+v repo=%+v", req.Build, req.Repo)
 
 	token, err := p.cache.GetAccessToken(req.Build.ID, req.Build.Sender)

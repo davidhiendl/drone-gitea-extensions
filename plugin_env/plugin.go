@@ -39,6 +39,8 @@ type plugin struct {
 }
 
 func (p *plugin) List(ctx context.Context, req *environ.Request) ([]*environ.Variable, error) {
+	logrus.Infof("[env] request for build=%s %s/%s commit=%s", req.Build.ID, req.Repo.Namespace, req.Repo.Name, req.Build.After)
+
 	logrus.Debugf("environment plugin request received: build=%+v repo=%+v", req.Build, req.Repo)
 
 	token, err := p.cache.GetAccessToken(req.Build.ID, req.Build.Sender)

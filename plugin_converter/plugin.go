@@ -44,6 +44,8 @@ type plugin struct {
 }
 
 func (p *plugin) Convert(ctx context.Context, req *converter.Request) (*drone.Config, error) {
+	logrus.Infof("[convert] request for build=%s %s/%s commit=%s", req.Build.ID, req.Repo.Namespace, req.Repo.Name, req.Build.After)
+
 	yaml, err := p.regexReplaceIncludeDirectives(req.Config.Data, http.DefaultClient)
 	if err != nil {
 		return nil, err
