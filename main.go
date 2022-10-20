@@ -65,7 +65,7 @@ func main() {
 		cfg.Secret,
 		logrus.StandardLogger(),
 	)
-	http.Handle("/converter", converterHandler)
+	http.Handle("/convert", converterHandler)
 
 	http.HandleFunc("/", func(writer http.ResponseWriter, request *http.Request) {
 		_, _ = fmt.Fprintf(writer, "OK")
