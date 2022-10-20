@@ -4,9 +4,12 @@ import (
 	"code.gitea.io/sdk/gitea"
 	"context"
 	"dhswt.de/drone-gitea-extensions/shared"
+	"github.com/Masterminds/semver"
 	"github.com/drone/drone-go/plugin/environ"
 	"github.com/sirupsen/logrus"
 	"net/url"
+	"strconv"
+	"strings"
 )
 
 // New returns a new secret plugin.
@@ -70,6 +73,37 @@ func (p *plugin) List(ctx context.Context, req *environ.Request) ([]*environ.Var
 			{Name: "CI_REGISTRY_PASSWORD", Data: token.Token, Mask: true},
 		}
 		envVars = append(envVars, ciVariables...)
+	}
+
+	if p.config.EnvAddTagSemver && strings.HasPrefix(req.Build.Ref, "refs/tags/") {
+		tag := strings.TrimPrefix(req.Build.Ref, "refs/tags/")
+		v, err := semver.NewVersion(tag)
+		if err != nil {
+			logrus.Debugf("failed to ref as semver: %s", req.Build.Ref)
+		}
+
+		semverVars := []*environ.Variable{
+			// mirror various gitlab CI_ variables
+			{Name: "SEMVER_MAJOR", Data: strconv.FormatInt(v.Major(), 10), Mask: false},
+			{Name: "SEMVER_MINOR", Data: strconv.FormatInt(v.Minor(), 10), Mask: false},
+			{Name: "SEMVER_PATCH", Data: strconv.FormatInt(v.Patch(), 10), Mask: false},
+			{Name: "SEMVER_PRERELEASE", Data: v.Prerelease(), Mask: false},
+			{Name: "SEMVER_METADATA", Data: v.Metadata(), Mask: false},
+			{
+				Name: "SEMVER_MAJOR_MINOR",
+				Data: strconv.FormatInt(v.Major(), 10) +
+					"." + strconv.FormatInt(v.Minor(), 10),
+				Mask: false,
+			},
+			{
+				Name: "SEMVER_MAJOR_MINOR_PATCH",
+				Data: strconv.FormatInt(v.Major(), 10) +
+					"." + strconv.FormatInt(v.Minor(), 10) +
+					"." + strconv.FormatInt(v.Patch(), 10),
+				Mask: false,
+			},
+		}
+		envVars = append(envVars, semverVars...)
 	}
 
 	return envVars, nil

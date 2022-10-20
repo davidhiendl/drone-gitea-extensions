@@ -16,4 +16,5 @@ type AppConfig struct {
 
 	DroneConfigIncludeMax      int  `envconfig:"DRONE_CONFIG_INCLUDE_MAX" default:"20"`
 	EmulateCIPrefixedVariables bool `envconfig:"EMULATE_CI_PREFIXED_ENV_VARS" default:"true"`
+	EnvAddTagSemver            bool `envconfig:"ENV_ADD_TAG_SEMVER" default:"true"`
 }

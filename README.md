@@ -46,6 +46,12 @@ but creates a token and injects the environment variables into every build regar
 | GITEA_PACKAGES_API | A URL pointing to the Gitea packages endpoint. | https://gitea.example.com/api/packages        |
 | GITEA_DOCKER_REGISTRY | A hostname for the Gitea docker registry. | gitea.example.com |
 
+**Configuration Options**
+| Key | Description | Default |
+| --- | --- |  --- |
+| EMULATE_CI_PREFIXED_ENV_VARS | Generate various commonly used CI_ environment variables | true |
+| ENV_ADD_TAG_SEMVER | Parse tags as semver and add SEMVER_ prefix variables for convenience. | true |
+
 Update your runner configuration to include the plugin address and the shared secret as environment variable:
 
 ```bash

@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	code.gitea.io/sdk/gitea v0.15.1
+	github.com/Masterminds/semver v1.5.0
 	github.com/drone/drone-go v1.7.1
 	github.com/joho/godotenv v1.4.0
 	github.com/kelseyhightower/envconfig v1.4.0
