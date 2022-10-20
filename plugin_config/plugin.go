@@ -45,7 +45,7 @@ type Plugin struct {
 }
 
 func (p *Plugin) Find(ctx context.Context, req *config.Request) (*drone.Config, error) {
-	logrus.Infof("[config] request for build=%s %s/%s commit=%s", req.Build.ID, req.Repo.Namespace, req.Repo.Name, req.Build.After)
+	logrus.Infof("[config] request for build=%d %s/%s commit=%s", req.Build.ID, req.Repo.Namespace, req.Repo.Name, req.Build.After)
 
 	contents, resp, err := p.client.GetContents(req.Repo.Namespace, req.Repo.Name, req.Build.After, ".drone.yml")
 	if err != nil {
