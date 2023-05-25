@@ -102,7 +102,13 @@ func (c *TokenCache) GetAccessToken(buildId int64, sender string) (*gitea.Access
 	accessTokenName := fmt.Sprintf("%s_%d_%d", c.config.GiteaDroneTokenPrefix, buildId, now)
 
 	c.client.SetSudo(sender)
-	token, _, err := c.client.CreateAccessToken(gitea.CreateAccessTokenOption{Name: accessTokenName})
+	token, _, err := c.client.CreateAccessToken(gitea.CreateAccessTokenOption{
+		Name: accessTokenName,
+		Scopes: []gitea.AccessTokenScope{
+			gitea.AccessTokenScopeAll,
+			gitea.AccessTokenScopeSudo,
+		},
+	})
 	if err != nil {
 		// TODO handle already exists errors?
 		return nil, errors.New(fmt.Sprintf("failed to create gitea access token: err=%+v buildId=%s sender=%s", err, buildId, sender))
