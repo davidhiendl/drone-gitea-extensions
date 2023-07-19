@@ -3,7 +3,7 @@ module dhswt.de/drone-gitea-extensions
 go 1.19
 
 require (
-	code.gitea.io/sdk/gitea v0.15.1-0.20230509035020-970776d1c1e9
+	code.gitea.io/sdk/gitea v0.15.1-0.20230715025955-0fe2ace1324e
 	github.com/Masterminds/semver v1.5.0
 	github.com/drone/drone-go v1.7.1
 	github.com/joho/godotenv v1.4.0

@@ -106,7 +106,6 @@ func (c *TokenCache) GetAccessToken(buildId int64, sender string) (*gitea.Access
 		Name: accessTokenName,
 		Scopes: []gitea.AccessTokenScope{
 			gitea.AccessTokenScopeAll,
-			gitea.AccessTokenScopeSudo,
 		},
 	})
 	if err != nil {
